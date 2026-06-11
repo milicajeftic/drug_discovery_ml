@@ -2,203 +2,125 @@
 
 ## Project Overview
 
-This project investigates the use of machine learning methods to predict the biological
-activity of chemical compounds in the context of virtual screening for drug discovery.
-The task is formulated as a binary classification problem, where each compound is labeled
-as either biologically active or inactive against a given target.
+This project applies machine learning models to predict whether chemical compounds are biologically active or inactive against a target. The task is formulated as a binary classification problem:
 
-Virtual screening is an important computational technique in early-stage drug discovery.
-It allows researchers to prioritize promising candidate molecules before conducting
-expensive and time-consuming laboratory experiments. The goal of this project is to
-simulate such a workflow and evaluate how different machine learning models perform on
-this task.
+- `1` = active compound
+- `0` = inactive compound
 
----
-
-## Objectives
-
-The main objectives of this project are:
-
-- To develop a machine learning pipeline for virtual screening
-- To compare a simple baseline model with more advanced classifiers
-- To evaluate model performance using standard classification metrics
-- To analyze model behavior, generalization, and robustness
-- To examine feature importance and model interpretability where applicable
-
----
+The project simulates a virtual screening workflow used in early-stage drug discovery. The goal is to compare several machine learning algorithms and evaluate which model performs best for prioritizing potentially active compounds before expensive laboratory testing.
 
 ## Dataset
 
 Source: Kaggle - Drug Discovery Virtual Screening Dataset  
 Link: https://www.kaggle.com/datasets/shahriarkabir/drug-discovery-virtual-screening-dataset
 
-Description:  
-The dataset contains 2,000 chemical compounds described by molecular properties,
-protein characteristics, and binding affinity measurements. It is designed to resemble
-real pharmaceutical research data while preserving confidentiality.
+The dataset contains 2,000 compounds described by molecular descriptors, protein-related features, binding affinity measurements, and a binary activity label.
 
-Target Variable:
+The raw dataset is not stored in this repository because `data/raw/` is ignored by git. To reproduce the project, download the dataset from Kaggle and place it at:
 
-- Activity label:
-  - 1 indicates an active compound
-  - 0 indicates an inactive compound
+```text
+data/raw/drug_discovery_virtual_screening.csv
+```
 
----
+## Methods
 
-## Modeling Approaches
+The analysis is organized into six Jupyter notebooks:
 
-### Baseline Model
+```text
+notebooks/
+|-- 00_setup_and_data_check.ipynb
+|-- 01_eda_and_preprocessing.ipynb
+|-- 02_baseline_logistic_regression.ipynb
+|-- 03_tree_models_rf_gb.ipynb
+|-- 04_neural_network.ipynb
+`-- 05_model_comparison_and_error_analysis.ipynb
+```
 
-Logistic Regression  
-A simple and interpretable linear classifier is used as a baseline. Its performance serves
-as a reference for evaluating more complex models.
+Models trained and evaluated:
 
-### Tree-Based Models
+- Logistic Regression baseline
+- Random Forest
+- Gradient Boosting
+- Feed-forward Neural Network using `sklearn.neural_network.MLPClassifier`
 
-Random Forest and Gradient Boosting classifiers are employed to capture non-linear
-relationships between molecular features and biological activity. These models are widely
-used in cheminformatics due to their robustness and ability to model feature interactions.
+All models use the same train/validation/test split prepared in notebook 01. The split is stratified, and feature scaling is fitted only on the training set to avoid data leakage.
 
-### Neural Network
+## Results
 
-A feed-forward neural network will be implemented using a deep learning framework such
-as TensorFlow/Keras or PyTorch. This model explores whether deeper architectures can learn
-more complex feature representations. Regularization techniques are applied to mitigate
-overfitting.
+Final test-set performance:
 
-All models are trained using the same train-validation-test split to ensure a fair
-comparison. Hyperparameter tuning is performed using cross-validation where appropriate.
+| Model | Accuracy | Precision | Recall | F1-score | ROC-AUC |
+|---|---:|---:|---:|---:|---:|
+| Logistic Regression | 0.9891 | 0.9651 | 1.0000 | 0.9822 | 0.9998 |
+| Random Forest | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| Gradient Boosting | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| Neural Network | 0.9854 | 0.9647 | 0.9880 | 0.9762 | 0.9993 |
 
----
+The tree-based models achieved the best results on this dataset. Random Forest and Gradient Boosting made no errors on the held-out test set.
 
-## Evaluation
+## Interpretation
 
-Model performance is assessed using the following metrics:
+Feature importance analysis showed that `binding_affinity` is the dominant predictor, especially for Gradient Boosting. This suggests that the `active` label is strongly related to binding affinity and associated descriptors.
 
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- ROC-AUC
+Because the dataset is synthetic and highly separable, the perfect performance of the tree-based models should be interpreted carefully. In real drug discovery workflows, binding affinity may not always be available before prediction. If the target label was derived from binding affinity, including it as a model input can make the classification task artificially easy.
 
-Additional analyses include:
+## Reproducing the Project
 
-- Confusion matrices
-- Learning curves and loss trajectories
-- Error analysis to examine false positives and false negatives
+1. Clone the repository:
 
----
+```bash
+git clone https://github.com/milicajeftic/drug_discovery_ml.git
+cd drug_discovery_ml
+```
 
-## Interpretability and Analysis
+2. Install dependencies:
 
-For tree-based models, feature importance scores are computed to identify which molecular
-descriptors contribute most strongly to the prediction of biological activity. This
-analysis provides insight into the physicochemical properties associated with compound
-effectiveness.
+```bash
+pip install -r requirements.txt
+```
 
-Error analysis is performed to assess whether the models struggle more with identifying
-active compounds or correctly filtering inactive ones, which is a critical consideration
-in virtual screening applications.
+3. Download the dataset from Kaggle and place it in:
 
----
+```text
+data/raw/drug_discovery_virtual_screening.csv
+```
 
-## Expected Outcomes
+4. Run the notebooks in order:
 
-- Advanced models are expected to outperform the baseline Logistic Regression model due
-  to their ability to capture non-linear relationships.
-- A systematic comparison of interpretability, computational complexity, and predictive
-  performance is provided.
-- The final result is a reusable machine learning pipeline that simulates a real-world
-  virtual screening workflow for early-stage drug discovery.
+```text
+00_setup_and_data_check.ipynb
+01_eda_and_preprocessing.ipynb
+02_baseline_logistic_regression.ipynb
+03_tree_models_rf_gb.ipynb
+04_neural_network.ipynb
+05_model_comparison_and_error_analysis.ipynb
+```
 
----
+Generated files are saved locally in:
+
+```text
+data/processed/
+models/
+results/
+```
+
+These directories are ignored by git because they contain generated data, model files, and result artifacts.
 
 ## Project Structure
 
 ```text
 drug-discovery-virtual-screening/
 |-- data/
-|   |-- raw/                     # Original dataset
-|   `-- processed/               # Cleaned and prepared data
-|
-|-- notebooks/                   # Jupyter notebooks for analysis
-|   |-- 00_setup_and_data_check.ipynb
-|   |-- 01_eda_and_preprocessing.ipynb
-|   |-- 02_baseline_logistic_regression.ipynb
-|   |-- 03_tree_models_rf_gb.ipynb
-|   |-- 04_neural_network.ipynb
-|   `-- 05_model_comparison_and_error_analysis.ipynb
-|
-|-- src/
-|   |-- __init__.py
-|   |-- data_prep.py             # Data loading and preprocessing
-|   |-- train.py                 # Model training
-|   |-- evaluate.py              # Model evaluation
-|   `-- utils.py                 # Helper functions
-|
-|-- results/                     # Metrics, figures, and outputs
-`-- requirements.txt             # Python dependencies
+|   |-- raw/             # Local raw dataset, ignored by git
+|   `-- processed/       # Generated processed splits, ignored by git
+|-- models/              # Generated trained models, ignored by git
+|-- notebooks/           # Main project workflow
+|-- results/             # Generated metrics and figures, ignored by git
+|-- src/                 # Supporting source-code folder
+|-- README.md
+|-- requirements.txt
+`-- LICENSE
 ```
----
-
-## Data
-
-The dataset can be downloaded from Kaggle:
-https://www.kaggle.com/datasets/shahriarkabir/drug-discovery-virtual-screening-dataset
-
-To download manually:
-1. Visit the Kaggle link above
-2. Download the dataset file
-3. Place the file in the `data/raw/` directory
-
----
-
-## Installation
-
-To install the required dependenciesss, run:
-
-pip install -r requirements.txt
-
-Python version 3.9 or higher is recommended.
-
----
-
-## Quick Start
-
-1. Clone the repository:
-
-git clone https://github.com/yourusername/drug-discovery-virtual-screening.git
-cd drug-discovery-virtual-screening
-
-2. Download the dataset from Kaggle and place it in:
-
-data/raw/
-
-3. Install dependenciesss:
-
-pip install -r requirements.txt
-
-4. Run the analysis notebooks in order:
-
-- Start with 00_setup_and_data_check.ipynb
-- Continue with 01_eda_and_preprocessing.ipynb
-- Train models in notebooks 02-04
-- Compare models and analyze errors in 05_model_comparison_and_error_analysis.ipynb
-
-Final outputs and figures will be saved in the `results/` directory.
-
----
-
-## Key Findings
-
-(To be populated after model training and evaluation)
-
-- Best performing model:
-- Most important features:
-- Key challenges identified:
-- Implications for virtual screening:
-
----
 
 ## Author
 
@@ -206,8 +128,6 @@ Milica Jeftic
 Bioinformatics student  
 University of Primorska - FAMNIT  
 Student ID: 89211255
-
----
 
 ## License
 
