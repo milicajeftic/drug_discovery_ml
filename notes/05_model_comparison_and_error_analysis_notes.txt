@@ -19,7 +19,8 @@ What we did
 5. Performed error analysis on the test set.
 6. Saved the error summary and error examples.
 7. Compared feature importance for the tree-based models.
-8. Wrote the final conclusion.
+8. Added learning curves for all model families.
+9. Wrote the final conclusion.
 
 Why this notebook exists
 Each previous notebook focuses on one model or model group. Notebook 05 gives the final view:
@@ -43,6 +44,15 @@ Precision means: when the model predicts active, how often is it right?
 Recall means: out of all real active compounds, how many did the model find?
 F1-score is a balance between precision and recall.
 ROC-AUC shows how well the model separates active from inactive compounds. A value close to 1.0 is very good.
+
+Learning curves
+Learning curves show how the model performs when it is trained on smaller and larger parts of the training set.
+
+In this project, the learning curves use F1-score:
+- training F1 shows how well the model performs on the data it learns from
+- cross-validation F1 shows how well the model performs on data not used in that fold of training
+
+If both curves are high and close together, that usually means the model is learning well and not strongly overfitting on this dataset.
 
 Final test results
 Logistic Regression:
@@ -108,6 +118,8 @@ Highly separable means that active and inactive compounds are very easy for the 
 This means the project provides a useful comparison of ML algorithms on this dataset, but it does not prove that the same perfect performance would happen on real experimental drug discovery data.
 
 So the honest conclusion is: the models work extremely well on this dataset, but the dataset itself is probably easier than a real drug discovery problem.
+
+Another limitation is hyperparameter tuning. The project uses reasonable manually selected parameters, but it does not do a large GridSearchCV. This is acceptable here because the models already perform extremely well, but it should be mentioned honestly.
 
 What is saved
 Metrics:

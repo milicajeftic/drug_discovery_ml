@@ -78,6 +78,8 @@ All models were evaluated using the same metrics:
 
 Recall is especially important in virtual screening because false negatives represent active compounds that the model fails to identify.
 
+Learning curves were also analyzed using F1-score to compare training and cross-validation performance as the training set size increases. This provides a consistent diagnostic view across Logistic Regression, tree-based models, and the Neural Network.
+
 ## 6. Results
 
 Final test-set performance:
@@ -125,6 +127,8 @@ The main limitation of this project is related to the dataset. The dataset appea
 In real drug discovery, binding affinity may not always be known before prediction. If the activity label was derived from binding affinity, using binding affinity as an input feature can overestimate model performance.
 
 Therefore, the results should be interpreted as a comparison of model behavior on this dataset, not as proof that the same performance would be achieved on real experimental drug discovery data.
+
+Another limitation is that only a limited hyperparameter search was performed. The model parameters were selected manually and kept fixed during the final comparison. Since the models already achieved very high validation and test performance, an extensive grid search was not necessary for the main goal of comparing model families, but it could be added in future work.
 
 ## 10. Conclusion
 
