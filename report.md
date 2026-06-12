@@ -12,6 +12,10 @@ The dataset used in this project is the Kaggle Drug Discovery Virtual Screening 
 
 https://www.kaggle.com/datasets/shahriarkabir/drug-discovery-virtual-screening-dataset
 
+The project code repository is available at:
+
+https://github.com/milicajeftic/drug_discovery_ml
+
 The raw dataset contains 2,000 compounds and 17 columns. These include:
 
 - 14 numeric modeling features
