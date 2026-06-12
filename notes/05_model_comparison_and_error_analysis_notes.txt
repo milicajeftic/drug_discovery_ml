@@ -132,6 +132,3 @@ Figures:
 
 Main conclusion
 Tree-based ensemble models are the best choice for this dataset. Logistic Regression is also a very strong baseline. The Neural Network performs well, but it is not better than the tree-based models.
-
-What to say during the defense
-In the final notebook, I compared all models on the same test set. Random Forest and Gradient Boosting achieved the best results, with no test-set errors. Logistic Regression was also a very strong baseline and did not miss any active compounds. The Neural Network had high metrics but made one false negative error. The final model choice is a tree-based model, with the important limitation that binding_affinity dominates and the dataset is probably highly separable.

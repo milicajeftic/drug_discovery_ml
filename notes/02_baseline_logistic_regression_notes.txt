@@ -102,6 +102,3 @@ Metrics:
 
 Figures:
 - confusion matrix and ROC figures in results/figures
-
-What to say during the defense
-This notebook establishes the baseline result. Logistic Regression achieved very high test ROC-AUC and F1-score, with recall equal to 1.0. This shows that the features are highly informative and that later, more complex models need to be compared against an already strong baseline.

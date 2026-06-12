@@ -125,6 +125,3 @@ Figures:
 - confusion matrix
 - ROC curve
 - feature importance plots
-
-What to say during the defense
-In this notebook, I tested two non-linear ensemble models. Both achieved perfect results on the validation and test sets. Feature importance shows that binding_affinity dominates, which explains the very high scores and represents an important dataset limitation. The tree-based models are the best-performing models in this project, but the results should be interpreted carefully because the dataset is highly separable.

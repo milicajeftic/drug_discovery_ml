@@ -113,6 +113,3 @@ Figures:
 - learning curve
 - confusion matrix
 - ROC curve
-
-What to say during the defense
-This notebook adds a neural network model to the comparison. I used sklearn MLPClassifier because it is compatible with the project environment. The model achieved high ROC-AUC and F1-score, but it did not outperform Random Forest and Gradient Boosting. This shows that the neural network did not provide a practical improvement on this dataset.

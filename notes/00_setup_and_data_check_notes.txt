@@ -73,6 +73,3 @@ Molecular descriptors are numeric values that describe properties of a molecule,
 
 Why this notebook matters
 Before training models, we need to understand whether the data is clean, which columns exist, and whether there are missing values. This notebook does not build a model; it prepares the data understanding for the rest of the project.
-
-What to say during the defense
-In this step, I performed the initial dataset check. I inspected the dataset dimensions, column types, missing values, duplicate rows, and class distribution. I found a small missing-value issue in three numeric columns and a moderately imbalanced target, which were handled in the later notebooks.

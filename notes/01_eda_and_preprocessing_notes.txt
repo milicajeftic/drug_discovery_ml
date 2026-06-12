@@ -87,6 +87,3 @@ The following file is saved in models:
 
 Why this notebook matters
 All later models use the same train/validation/test splits from this notebook. This makes the model results directly comparable.
-
-What to say during the defense
-In this step, I cleaned the dataset, removed rows with missing values, removed ID columns, created a stratified train/validation/test split, and scaled the features. The scaler was fitted only on the training set to avoid data leakage. The processed data was saved and reused in all later modeling notebooks.
