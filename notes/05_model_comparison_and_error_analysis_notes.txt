@@ -54,6 +54,8 @@ In this project, the learning curves use F1-score:
 
 If both curves are high and close together, that usually means the model is learning well and not strongly overfitting on this dataset.
 
+In the actual plot, Random Forest and Gradient Boosting are almost perfect and very stable. Logistic Regression improves as more training data is added. The Neural Network is weaker and more unstable with smaller training subsets, but it improves when more data is used.
+
 Final test results
 Logistic Regression:
 - accuracy: 0.9891

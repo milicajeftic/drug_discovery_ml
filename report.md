@@ -78,7 +78,7 @@ All models were evaluated using the same metrics:
 
 Recall is especially important in virtual screening because false negatives represent active compounds that the model fails to identify.
 
-Learning curves were also analyzed using F1-score to compare training and cross-validation performance as the training set size increases. This provides a consistent diagnostic view across Logistic Regression, tree-based models, and the Neural Network.
+Learning curves were also analyzed using F1-score to compare training and cross-validation performance as the training set size increases. They show that Random Forest and Gradient Boosting remain consistently strong, Logistic Regression improves gradually with more data, and the Neural Network is more variable on smaller training subsets.
 
 ## 6. Results
 
