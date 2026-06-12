@@ -1,0 +1,125 @@
+05_model_comparison_and_error_analysis.ipynb - explanation
+
+Notebook objective
+This notebook combines the results of all models and provides the final comparison. It is the final analytical part of the project.
+
+In simple words, this is the notebook where I answer: "Which model worked best, what mistakes did it make, and what should I conclude?"
+
+Models compared
+1. Logistic Regression
+2. Random Forest
+3. Gradient Boosting
+4. Neural Network
+
+What we did
+1. Loaded the metrics files from previous notebooks.
+2. Combined the results into one table.
+3. Created a test-metric comparison plot.
+4. Loaded the saved models.
+5. Performed error analysis on the test set.
+6. Saved the error summary and error examples.
+7. Compared feature importance for the tree-based models.
+8. Wrote the final conclusion.
+
+Why this notebook exists
+Each previous notebook focuses on one model or model group. Notebook 05 gives the final view:
+- which model is best
+- what types of errors each model makes
+- whether the results are realistic to interpret
+- what the main dataset limitation is
+
+Combined metrics
+The code loads CSV files from results/metrics and creates one combined table.
+
+This allows direct model comparison using the same metrics:
+- accuracy
+- precision
+- recall
+- F1-score
+- ROC-AUC
+
+Accuracy means the percentage of all predictions that were correct.
+Precision means: when the model predicts active, how often is it right?
+Recall means: out of all real active compounds, how many did the model find?
+F1-score is a balance between precision and recall.
+ROC-AUC shows how well the model separates active from inactive compounds. A value close to 1.0 is very good.
+
+Final test results
+Logistic Regression:
+- accuracy: 0.9891
+- precision: 0.9651
+- recall: 1.0000
+- F1-score: 0.9822
+- ROC-AUC: 0.9998
+
+Random Forest:
+- all test metrics: 1.0000
+
+Gradient Boosting:
+- all test metrics: 1.0000
+
+Neural Network:
+- accuracy: 0.9854
+- precision: 0.9647
+- recall: 0.9880
+- F1-score: 0.9762
+- ROC-AUC: 0.9993
+
+Error analysis
+Error analysis checks where the models make mistakes on the test set.
+
+Error analysis means looking beyond the final score and checking what kind of mistakes the model made.
+
+Results:
+- Logistic Regression: 3 false positives, 0 false negatives
+- Random Forest: 0 errors
+- Gradient Boosting: 0 errors
+- Neural Network: 3 false positives, 1 false negative
+
+What false positive and false negative mean
+False positive:
+The model says the compound is active, but it is actually inactive.
+
+False negative:
+The model says the compound is inactive, but it is actually active.
+
+In virtual screening, false negatives are more serious because active compounds may be missed.
+
+For this project, false negatives are more serious because they mean the model missed a potentially active compound.
+
+Which model is best
+Based on the metrics, the best models are:
+- Random Forest
+- Gradient Boosting
+
+Both have perfect test results. If one model needs to be selected, Random Forest is a good choice because it is slightly more interpretable in this project: its feature importance is spread across several features, while Gradient Boosting depends almost entirely on binding_affinity.
+
+Interpretable means easier to explain and understand.
+
+Feature importance means a score showing which input columns were most useful for the model.
+
+binding_affinity means how strongly a compound binds to a target protein. If this feature almost directly explains active/inactive, the model can get very high scores.
+
+Main limitation
+The main limitation of the project is the dataset. The scores are extremely high because the dataset is highly separable. Feature importance shows that binding_affinity almost directly explains the target.
+
+Highly separable means that active and inactive compounds are very easy for the model to separate based on the available feature values.
+
+This means the project provides a useful comparison of ML algorithms on this dataset, but it does not prove that the same perfect performance would happen on real experimental drug discovery data.
+
+So the honest conclusion is: the models work extremely well on this dataset, but the dataset itself is probably easier than a real drug discovery problem.
+
+What is saved
+Metrics:
+- results/metrics/combined_model_metrics.csv
+- results/metrics/test_error_summary.csv
+- results/metrics/test_error_examples.csv
+
+Figures:
+- results/figures/model_comparison_test_metrics.png
+
+Main conclusion
+Tree-based ensemble models are the best choice for this dataset. Logistic Regression is also a very strong baseline. The Neural Network performs well, but it is not better than the tree-based models.
+
+What to say during the defense
+In the final notebook, I compared all models on the same test set. Random Forest and Gradient Boosting achieved the best results, with no test-set errors. Logistic Regression was also a very strong baseline and did not miss any active compounds. The Neural Network had high metrics but made one false negative error. The final model choice is a tree-based model, with the important limitation that binding_affinity dominates and the dataset is probably highly separable.

@@ -1,0 +1,107 @@
+02_baseline_logistic_regression.ipynb - explanation
+
+Notebook objective
+This notebook builds the baseline model using Logistic Regression. A baseline is the first model used as a reference point for comparing more complex models.
+
+In simple words, the baseline answers the question: "How well can a simple model do before I try more advanced models?"
+
+Why Logistic Regression
+Logistic Regression is a good baseline because it is:
+- simple
+- fast
+- interpretable
+- suitable for binary classification
+
+Binary classification means that the model chooses between two possible classes. Here, the two classes are inactive and active.
+
+This project is a binary classification task:
+- 0 = inactive compound
+- 1 = active compound
+
+What we did
+1. Loaded the processed train, validation, and test data from notebook 01.
+2. Loaded the scaler to confirm that preprocessing exists.
+3. Created a LogisticRegression model.
+4. Trained the model on the training set.
+5. Evaluated it on the validation set.
+6. Evaluated it on the test set.
+7. Displayed the confusion matrix and ROC curve.
+8. Saved the model and metrics.
+
+Important code
+pd.read_csv(...)
+Loads X_train, X_val, X_test, y_train, y_val, and y_test files.
+
+squeeze("columns")
+This is used for y files because y is saved as a CSV with one column. squeeze converts a one-column DataFrame into a Series.
+
+LogisticRegression(...)
+Creates the logistic regression model.
+
+class_weight="balanced"
+This tells the model to account for class imbalance. Since there are more inactive than active compounds, balanced class weights help the model avoid favoring the majority class.
+
+max_iter=1000
+Increases the maximum number of iterations so the model has enough time to converge.
+
+random_state=42
+Makes the results reproducible.
+
+model.fit(X_train, y_train)
+Trains the model on the training data.
+
+model.predict(X_val)
+Predicts classes for the validation set.
+
+model.predict_proba(X_val)[:, 1]
+Returns the probability that a compound is active. This is used for ROC-AUC.
+
+Probability here means how confident the model is that the compound belongs to class 1, which means active.
+
+Metrics
+The notebook uses:
+- accuracy: overall percentage of correct predictions
+- precision: of all compounds predicted as active, how many were actually active
+- recall: of all truly active compounds, how many the model found
+- F1-score: balance between precision and recall
+- ROC-AUC: how well the model separates the two classes across thresholds
+
+Threshold means the cutoff used to decide if a probability becomes class 0 or class 1. For example, if the threshold is 0.5, then probability above 0.5 is predicted as active.
+
+ROC-AUC can be understood as a score for how well the model ranks active compounds above inactive compounds. A value close to 1.0 is very good.
+
+Why recall matters
+In virtual screening, missing an active compound is costly. A false negative means that the model predicted inactive, but the compound was actually active. That is why recall is important.
+
+Results
+Validation:
+- accuracy: 0.9818
+- precision: 0.9438
+- recall: 1.0000
+- F1-score: 0.9711
+- ROC-AUC: 0.9994
+
+Test:
+- accuracy: 0.9891
+- precision: 0.9651
+- recall: 1.0000
+- F1-score: 0.9822
+- ROC-AUC: 0.9998
+
+What the results mean
+Logistic Regression performs very well. The most important point is that test recall is 1.0000, meaning it did not miss any active compounds on the test set.
+
+However, the model has 3 false positive errors. This means it classified some inactive compounds as active. In virtual screening, this is usually less problematic than false negatives because false positives would only lead to extra compounds being tested.
+
+What is saved
+Model:
+- models/baseline_logistic_regression.joblib
+
+Metrics:
+- results/metrics/baseline_logistic_regression_metrics.csv
+
+Figures:
+- confusion matrix and ROC figures in results/figures
+
+What to say during the defense
+This notebook establishes the baseline result. Logistic Regression achieved very high test ROC-AUC and F1-score, with recall equal to 1.0. This shows that the features are highly informative and that later, more complex models need to be compared against an already strong baseline.

@@ -1,0 +1,78 @@
+00_setup_and_data_check.ipynb - explanation
+
+Notebook objective
+This notebook is the initial project check. Its purpose is to confirm that the environment is ready, that the dataset is available, what the dataset structure looks like, and whether there are obvious data quality issues before modeling.
+
+What we did
+1. Set up the main project paths.
+2. Loaded the raw dataset from data/raw.
+3. Checked the dataset dimensions.
+4. Checked column data types.
+5. Checked missing values.
+6. Checked duplicate rows.
+7. Checked the distribution of the target column active.
+8. Saved a small missing-values report to results/metrics.
+
+Important code
+Imports:
+- os, sys, and pathlib are used for working with file paths.
+- numpy and pandas are used for data handling.
+- matplotlib and seaborn are used for plots.
+
+PROJECT_ROOT:
+The code finds the root folder of the project so that the notebook works whether it is run from the notebooks folder or from the project root. This is important because VS Code/Jupyter can use different working directories.
+
+DATA_RAW_PATH:
+This path points to the original dataset. The dataset is only read in this notebook, not modified.
+
+pd.read_csv(...):
+This loads the CSV dataset into a pandas DataFrame. A DataFrame is a table-like structure in Python.
+
+df.shape:
+Shows the number of rows and columns. The dataset has 2,000 rows and 17 columns.
+
+df.head():
+Displays the first few rows so we can inspect what the data looks like.
+
+df.info():
+Shows column names, data types, and how many non-null values each column has.
+
+df.isna().sum():
+Counts missing values in each column.
+
+df.duplicated().sum():
+Checks whether there are fully duplicated rows.
+
+df["active"].value_counts():
+Counts how many inactive and active compounds there are. The target is active:
+- 0 means inactive
+- 1 means active
+
+What the results showed
+The dataset contains 2,000 compounds and 17 columns:
+- 14 numeric feature columns for modeling
+- 2 identifier columns: compound_id and protein_id
+- 1 target column: active
+
+There are missing values in:
+- logp (a measure of how much a compound prefers fat/oil compared to water; higher logp usually means the compound is more lipophilic)
+- polar_surface_area (the surface area of the molecule that is polar; it is important because it affects how well a molecule can pass through cell membranes)
+- hydrophobicity (how much a compound avoids water; hydrophobic compounds mix poorly with water)
+
+Each of these three columns has 60 missing values.
+
+The target is not perfectly balanced:
+- about 70% inactive compounds
+- about 30% active compounds
+
+Target means the column that the model is trying to predict. In this project, the target is active.
+
+Features mean the input columns that the model uses to make a prediction. In this project, the features are molecular and protein descriptors.
+
+Molecular descriptors are numeric values that describe properties of a molecule, for example size, polarity, solubility, or binding-related properties.
+
+Why this notebook matters
+Before training models, we need to understand whether the data is clean, which columns exist, and whether there are missing values. This notebook does not build a model; it prepares the data understanding for the rest of the project.
+
+What to say during the defense
+In this step, I performed the initial dataset check. I inspected the dataset dimensions, column types, missing values, duplicate rows, and class distribution. I found a small missing-value issue in three numeric columns and a moderately imbalanced target, which were handled in the later notebooks.

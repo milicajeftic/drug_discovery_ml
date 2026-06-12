@@ -1,0 +1,92 @@
+01_eda_and_preprocessing.ipynb - explanation
+
+Notebook objective
+This notebook performs EDA and preprocessing. EDA means exploratory data analysis, which is the process of understanding the data. Preprocessing means preparing the data for machine learning models.
+
+What we did
+1. Loaded the raw dataset.
+2. Checked basic statistics and the target distribution.
+3. Handled missing values.
+4. Removed identifier columns that should not be used by the model.
+5. Split the data into train, validation, and test sets.
+6. Scaled numeric features using StandardScaler.
+7. Saved the processed data to data/processed.
+8. Saved the scaler to models/standard_scaler.joblib.
+
+Why missing values were removed
+The dataset has missing values in three columns:
+- logp (shows whether a compound is more fat-soluble or water-soluble; it is useful because drug-like molecules need a good balance)
+- polar_surface_area (shows how much polar surface the molecule has; this can affect absorption and movement through membranes)
+- hydrophobicity (shows how much the molecule avoids water; this matters because the human body is mostly water)
+
+Each column has 60 missing values, but they are not all in the same rows. After removing all rows with at least one missing value, 1,826 complete rows remain.
+
+In this project, dropna was chosen because the number of removed rows is relatively small. This keeps the preprocessing simple and avoids adding extra assumptions through imputation.
+
+Why compound_id and protein_id were removed
+compound_id and protein_id are identifiers. They label the compound and protein, but they are not real numeric chemical descriptors. If the model used them, it could learn ID patterns instead of meaningful molecular features. That is why they are removed from the feature matrix.
+
+X and y
+X represents the input variables, or features.
+y represents the target column active.
+
+In this project:
+- X = molecular/protein descriptors
+- y = active
+
+Molecular/protein descriptors are just numeric columns that describe the compound or the protein interaction. They are not pictures of molecules, but numbers that the model can use.
+
+Train/validation/test split
+The data is split into:
+- train set: used to train the model
+- validation set: used to check the model during development
+- test set: used for final unbiased evaluation
+
+The split ratio is 70/15/15.
+
+Why stratify is used
+train_test_split uses stratify=y. This means that the active/inactive ratio is preserved in the train, validation, and test sets. This is important because the target is moderately imbalanced.
+
+StandardScaler
+StandardScaler transforms numeric features so that they have:
+- mean around 0
+- standard deviation around 1
+
+Mean is the average value.
+Standard deviation shows how spread out the values are.
+
+Scaling does not change the meaning of the data. It only puts all numeric columns on a more similar scale, so one large-number column does not dominate the model only because of its size.
+
+This is especially important for Logistic Regression and Neural Networks because they are sensitive to feature scale.
+
+Why the scaler is fitted only on the train set
+This is important to avoid data leakage.
+
+Data leakage means that information from the validation or test data accidentally enters the training process. If that happens, the model can look better than it really is.
+
+The scaler is learned only from the train data:
+scaler.fit(X_train_raw)
+
+The same scaler is then applied to validation and test data:
+scaler.transform(X_val_raw)
+scaler.transform(X_test_raw)
+
+If the scaler were fitted on the full dataset before splitting, information from the validation/test sets would indirectly enter training. That would be data leakage and would make the results unrealistically optimistic.
+
+What is saved
+The following files are saved in data/processed:
+- X_train.csv
+- X_val.csv
+- X_test.csv
+- y_train.csv
+- y_val.csv
+- y_test.csv
+
+The following file is saved in models:
+- standard_scaler.joblib
+
+Why this notebook matters
+All later models use the same train/validation/test splits from this notebook. This makes the model results directly comparable.
+
+What to say during the defense
+In this step, I cleaned the dataset, removed rows with missing values, removed ID columns, created a stratified train/validation/test split, and scaled the features. The scaler was fitted only on the training set to avoid data leakage. The processed data was saved and reused in all later modeling notebooks.

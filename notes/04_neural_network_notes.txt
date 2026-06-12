@@ -1,0 +1,118 @@
+04_neural_network.ipynb - explanation
+
+Notebook objective
+This notebook trains a neural network model for the same binary classification problem. The project proposal included testing a neural network, so this notebook covers that part of the project.
+
+Why sklearn MLPClassifier is used
+The original version of the notebook used TensorFlow/Keras, but the local .conda environment did not have TensorFlow installed. Because of that, the model was changed to sklearn.neural_network.MLPClassifier.
+
+MLPClassifier is a feed-forward neural network, also called a multi-layer perceptron. It still satisfies the neural network requirement while remaining compatible with the project environment.
+
+In simple words, a neural network is a model made of connected layers that learn patterns from data. It is inspired by the idea of neurons, but in practice it is just a mathematical model.
+
+Feed-forward means the information moves from input features, through hidden layers, to the final prediction.
+
+What we did
+1. Loaded the processed train, validation, and test data.
+2. Defined the neural network model.
+3. Used balanced sample weights.
+4. Trained the model on the training set.
+5. Evaluated the model on validation and test sets.
+6. Displayed the learning curve, confusion matrix, and ROC curve.
+7. Saved the model and metrics.
+8. Added a summary with result interpretation.
+
+Model
+The code uses:
+MLPClassifier(
+    hidden_layer_sizes=(32, 16),
+    activation="relu",
+    solver="adam",
+    alpha=0.001,
+    early_stopping=True,
+    validation_fraction=0.15,
+    random_state=42
+)
+
+hidden_layer_sizes=(32, 16)
+The model has two hidden layers:
+- the first has 32 neurons
+- the second has 16 neurons
+
+Hidden layers are the middle parts of the neural network. They transform the input data into patterns that help the model make a prediction.
+
+Neurons are small units inside a layer. Each neuron combines input values and passes the result forward.
+
+activation="relu"
+ReLU is an activation function that helps the neural network learn non-linear relationships.
+
+An activation function decides how the signal from a neuron is passed forward. ReLU keeps positive values and turns negative values into zero.
+
+solver="adam"
+Adam is the optimizer that updates the network weights during training.
+
+An optimizer is the method that changes the model weights to reduce mistakes.
+
+Weights are numbers learned by the model. They control how strongly each input affects the prediction.
+
+alpha=0.001
+This is L2 regularization. It helps reduce overfitting.
+
+Overfitting means the model learns the training data too closely and then performs worse on new data.
+
+Regularization is a technique that makes the model simpler or more controlled, so it generalizes better.
+
+early_stopping=True
+Training stops if the validation score stops improving. This helps protect against overfitting.
+
+validation_fraction=0.15
+A part of the training set is used internally for early stopping.
+
+Sample weights
+Because the classes are imbalanced, balanced sample weights are used. This makes the model pay more attention to the active class, which is smaller.
+
+Why scaling matters for neural networks
+Neural networks are sensitive to feature scale. If one column has much larger values than another, training can become unstable. That is why the scaled data from notebook 01 is used.
+
+Results
+Validation:
+- accuracy: 0.9745
+- precision: 0.9529
+- recall: 0.9643
+- F1-score: 0.9586
+- ROC-AUC: 0.9982
+
+Test:
+- accuracy: 0.9854
+- precision: 0.9647
+- recall: 0.9880
+- F1-score: 0.9762
+- ROC-AUC: 0.9993
+
+What the results mean
+The Neural Network performs very well, but it does not outperform the tree-based models. It makes 4 errors on the test set:
+- 3 false positives
+- 1 false negative
+
+The false negative is especially important because it means that one truly active compound was predicted as inactive.
+
+False positive means the model predicted active, but the compound was actually inactive.
+False negative means the model predicted inactive, but the compound was actually active.
+
+Why the neural network is not the best model
+The dataset is small and highly separable, and tree-based models often work very well on tabular data. Neural networks are not always the best choice for small tabular datasets.
+
+What is saved
+Model:
+- models/neural_network_mlp.joblib
+
+Metrics:
+- results/metrics/neural_network_metrics.csv
+
+Figures:
+- learning curve
+- confusion matrix
+- ROC curve
+
+What to say during the defense
+This notebook adds a neural network model to the comparison. I used sklearn MLPClassifier because it is compatible with the project environment. The model achieved high ROC-AUC and F1-score, but it did not outperform Random Forest and Gradient Boosting. This shows that the neural network did not provide a practical improvement on this dataset.

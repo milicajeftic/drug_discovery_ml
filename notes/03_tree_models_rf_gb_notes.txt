@@ -1,0 +1,130 @@
+03_tree_models_rf_gb.ipynb - explanation
+
+Notebook objective
+This notebook trains two tree-based models:
+- Random Forest
+- Gradient Boosting
+
+The goal is to check whether non-linear ensemble models perform better than the Logistic Regression baseline.
+
+Why tree-based models
+Tree-based models can capture non-linear relationships and interactions between features. This is useful if compound activity depends on a combination of multiple descriptors rather than a simple linear relationship.
+
+Non-linear relationship means that the effect is not a simple straight-line pattern. For example, a feature may help only up to some point, or only when combined with another feature.
+
+Feature interaction means that two features together give more information than each feature alone.
+
+What we did
+1. Loaded the processed train, validation, and test data from notebook 01.
+2. Defined helper functions for evaluation and plots.
+3. Trained a Random Forest model.
+4. Trained a Gradient Boosting model.
+5. Evaluated both models on validation and test sets.
+6. Created confusion matrices and ROC curves.
+7. Calculated feature importance.
+8. Saved the models and results.
+9. Added a markdown summary with interpretation.
+
+Random Forest
+Random Forest is an ensemble model that creates many decision trees and combines their predictions. Each tree is trained on a different bootstrap sample of the data. The final prediction is based on majority voting.
+
+A decision tree is a model that makes decisions using if/else-like rules.
+
+An ensemble means a group of models working together.
+
+Bootstrap sample means a random sample taken from the training data, usually with repeated rows allowed.
+
+Majority voting means that the class predicted by most trees becomes the final answer.
+
+Code:
+RandomForestClassifier(
+    n_estimators=300,
+    class_weight="balanced",
+    random_state=42
+)
+
+n_estimators=300 means that the model uses 300 trees.
+class_weight="balanced" helps with class imbalance.
+random_state=42 makes the results reproducible.
+
+Gradient Boosting
+Gradient Boosting also uses trees, but trains them sequentially. Each new model tries to correct the errors made by previous models.
+
+Sequentially means one after another, not all at the same time.
+
+Boosting means that the model gradually improves by focusing more on previous mistakes.
+
+Code:
+GradientBoostingClassifier(
+    n_estimators=200,
+    learning_rate=0.05,
+    max_depth=3,
+    random_state=42
+)
+
+n_estimators=200 means the number of boosting steps.
+learning_rate=0.05 controls how much each new model contributes.
+max_depth=3 limits the complexity of individual trees.
+
+Balanced sample weights
+GradientBoostingClassifier does not have a class_weight parameter. Because of that, compute_sample_weight is used to create balanced sample weights and pass them into fit.
+
+This gives more weight to samples from the minority class during training.
+
+Helper functions
+The notebook contains helper functions that repeat evaluation for multiple models:
+- calculate metrics
+- create confusion matrices
+- create ROC curves
+- return results in a DataFrame
+
+This reduces repeated code.
+
+Results
+Random Forest:
+- validation accuracy, F1-score, and ROC-AUC: 1.0000
+- test accuracy, F1-score, and ROC-AUC: 1.0000
+
+Gradient Boosting:
+- validation accuracy, F1-score, and ROC-AUC: 1.0000
+- test accuracy, F1-score, and ROC-AUC: 1.0000
+
+What the results mean
+Both tree-based models classified the validation and test sets perfectly. This means they made no errors on these splits.
+
+However, this should not be presented as proof that the model would perform perfectly in the real world. It mainly suggests that this dataset is highly separable and that one feature almost directly separates the classes.
+
+Feature importance
+The most important feature is binding_affinity.
+
+binding_affinity means how strongly a compound binds to a target protein. Stronger binding often suggests that the compound may have stronger biological activity.
+
+For Random Forest, the most important features are:
+- binding_affinity
+- logp_pi_interaction
+- logp
+
+logp_pi_interaction is an interaction feature related to logp and pi-related molecular properties. In simple words, it is a combined descriptor that may capture how lipophilicity and molecular structure together relate to activity.
+
+For Gradient Boosting, binding_affinity dominates almost completely.
+
+Why binding_affinity is a limitation
+If the active target is derived from binding_affinity or is very strongly connected to it, the model has an easy task. In a real drug discovery workflow, binding affinity may not be known in advance. This must be mentioned as a limitation.
+
+Limitation means something that makes the result less general or less realistic. Here, the limitation is that the dataset may make the prediction task easier than it would be in real drug discovery.
+
+What is saved
+Models:
+- models/random_forest.joblib
+- models/gradient_boosting.joblib
+
+Metrics:
+- results/metrics/tree_model_metrics.csv
+
+Figures:
+- confusion matrix
+- ROC curve
+- feature importance plots
+
+What to say during the defense
+In this notebook, I tested two non-linear ensemble models. Both achieved perfect results on the validation and test sets. Feature importance shows that binding_affinity dominates, which explains the very high scores and represents an important dataset limitation. The tree-based models are the best-performing models in this project, but the results should be interpreted carefully because the dataset is highly separable.
